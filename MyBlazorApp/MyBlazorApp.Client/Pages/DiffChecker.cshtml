@@ -1,0 +1,94 @@
+﻿@using MyBlazorApp.Shared
+@page "/diffchecker"
+
+@if (Differences != null)
+{
+    if (Differences.Count == 0)
+    {
+        <h1> There is no differences in your text</h1>
+    }
+    else
+    {
+       <DifferentRowsComponent Differences="@Differences" />
+    }
+}
+<div class="container row d-flex">
+    <div class="container row col-6">
+        <div class="row ml-3">
+            <h5>Originals Text:</h5>
+        </div>
+        <div id="original" class="col-12 d-flex justify-content-start">
+               <RowsListComponent Counter="@Counter"/>
+            <textarea class="form-control col-10" rows="5" style="overflow:hidden"  id="originalText"  bind="@OriginalText"></textarea>
+        </div>
+    </div>
+    <div class="container row col-6">
+        <div class="row ml-3">
+            <h5>Changed Text:</h5>
+        </div>
+        <div id="original" class="col-12 d-flex justify-content-start">
+            <RowsListComponent Counter="@Counter" />
+            <textarea class="form-control col-10" rows="5" id="changedText" style="overflow:hidden" bind="@ChangedText"></textarea>
+        </div>
+    </div>
+    <div class="container justify-content-start row mt-4" onclick="@(()=>CheckTexts())">
+        <button class="btn btn-primary"> Check it Out! </button>
+    </div>
+</div>
+@functions {
+
+    private static string OriginalText { get; set; } = String.Empty;
+    private static string ChangedText { get; set; } = String.Empty;
+    private static int Counter  => OriginalText.Split(new string[] { Environment.NewLine }, StringSplitOptions.None).Length;
+    private List<TextCheck> Differences { get; set; }
+
+    Task CheckTexts()
+    {
+        Differences = new List<TextCheck>();
+        var originalTextRows = OriginalText.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+        var changedTextRows = ChangedText.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+
+        var minLength = Math.Min(originalTextRows.Length, changedTextRows.Length);
+
+
+        for (int i = 0; i < minLength; i++)
+        {
+            if (originalTextRows[i] == changedTextRows[i])
+            {
+                continue;
+            }
+            Differences.Add(new TextCheck()
+            {
+                ChangedRowText = changedTextRows[i],
+                OriginalRowText = originalTextRows[i],
+                RowId = i
+            });
+        }
+        if (originalTextRows.Length > changedTextRows.Length)
+        {
+            for (int i = minLength; i < originalTextRows.Length; i++)
+            {
+                Differences.Add(new TextCheck()
+                {
+                    ChangedRowText = String.Empty,
+                    OriginalRowText = originalTextRows[i],
+                    RowId = i
+                });
+            }
+        }
+        else if (originalTextRows.Length < changedTextRows.Length)
+        {
+            for (int i = minLength; i < changedTextRows.Length; i++)
+            {
+                Differences.Add(new TextCheck()
+                {
+                    ChangedRowText = changedTextRows[i],
+                    OriginalRowText = String.Empty,
+                    RowId = i
+                });
+            }
+        }
+        return Task.CompletedTask;
+    }
+
+}

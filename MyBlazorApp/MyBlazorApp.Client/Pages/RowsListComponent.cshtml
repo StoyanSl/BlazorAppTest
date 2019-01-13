@@ -1,0 +1,15 @@
+﻿<div class="mx-2 bg-white border pt-2 border-secondary" style="border-radius:10px; border-color:lightgray; padding-left:3px;">
+    @for (int i = 1; i <= Counter; i++)
+    {
+        @i
+        <br>
+    }
+</div>
+
+@functions{
+    [Parameter]
+    private int Counter { get; set; }
+
+    [Parameter]
+    private Action<int> CounterChanged { get; set; }
+}

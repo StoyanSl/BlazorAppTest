@@ -1,0 +1,31 @@
+﻿@using MyBlazorApp.Shared;
+@using System.Text;
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col"> Row Id</th>
+            <th scope="col">Original Text</th>
+            <th scope="col">Changed Text</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var difference in Differences)
+        {
+            
+            <tr>
+                <th scope="row">@(difference.RowId+1)</th>
+                <td>@difference.OriginalRowText</td>
+                <td class="text-danger">@difference.ChangedRowText </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+@functions{
+    [Parameter]
+    private List<TextCheck> Differences { get; set; }
+    
+}
