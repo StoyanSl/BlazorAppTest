@@ -1,2 +1,2 @@
 # BlazorAppTest
-Simple text difference checker by row.
+Simple text difference checker.
